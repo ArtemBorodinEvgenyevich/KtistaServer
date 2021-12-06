@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern
 @Entity
 @Table(name = "`user`")
 @EntityListeners(UserListener::class)
-data class User(
+class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
 
@@ -26,12 +26,24 @@ data class User(
     @get: NotBlank
     var password: String = "",
 
-    var status: String = "",
+    @get: NotBlank
+    var firstName: String = "",
 
-    @Pattern(regexp = "\\A(activated|deactivated)\\z")
-    var accountStatus: String = "activated",
+    @get: NotBlank
+    var lastName: String = "",
+
+    @get: NotBlank
+    var followersCounter: Long = 0,
+
+    @get: NotBlank
+    var followingsCounter: Long = 0,
+
+    var status: String = "available",
 
     @DateTimeFormat
     var createdAt: Date = Date.from(Instant.now())
-
 )
+{
+    @OneToMany(mappedBy = "user_id", targetEntity = Post::class)
+    private var posts: Collection<Post>? = null
+}
